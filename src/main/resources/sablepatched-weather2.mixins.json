@@ -4,7 +4,9 @@
   "package": "mackery.sablepatched.mixin.weather2",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "tornado_moves_sublevels.TornadoHelperMixin"
+    "tornado_moves_sublevels.TornadoHelperMixin",
+    "tornado_grabs_blocks_as_sublevels.TornadoHelperBlockGrabMixin",
+    "tornado_grabs_blocks_as_sublevels.ServerSubLevelDebrisLandingMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -60,5 +60,64 @@ public class Config {
                                         "velocity outright, so a lopsided structure can be spun, not just shoved.")
                         .define("weather2TornadoesMoveSubLevels", true);
 
+        public static final ModConfigSpec.BooleanValue WEATHER2_TORNADOES_GRAB_BLOCKS_AS_PHYSICS_OBJECTS = BUILDER
+                        .comment(
+                                        "Weather2 compat, optional/experimental (no-op if Weather2 isn't installed). Weather2's",
+                                        "tornadoes currently grab individual blocks by silently queuing them to become air ~40",
+                                        "ticks later and showing a purely cosmetic client-side particle in the meantime - the block",
+                                        "has no collision, no real motion, and can't land anywhere; the old EntityMovingBlock that",
+                                        "used to back this was never ported. When enabled, an eligible grabbed block instead",
+                                        "becomes a real 1-block Sable sub-level (skipping the fake particle), reusing the exact",
+                                        "same spinObject()-derived impulse as weather2TornadoesMoveSubLevels above so heavier blocks",
+                                        "resist being flung more than light ones. It's tagged so only tornado debris (never a real",
+                                        "player structure) auto-settles back into a normal placed block once it comes to rest -",
+                                        "see weather2GrabbedBlockMaxMass below for the eligibility cutoff. Blocks with a block",
+                                        "entity (chests, etc.) are always left to the vanilla path, to avoid losing their contents.",
+                                        "Off by default: unlike the patches above, this creates new sub-levels (real ongoing tick",
+                                        "cost - see fixRedundantMassMerge/skipUnobservedSubLevelTicking above) rather than removing",
+                                        "unnecessary work, so it's a deliberate trade of some overhead for a real gameplay effect.")
+                        .define("weather2TornadoesGrabBlocksAsPhysicsObjects", false);
+
+        public static final ModConfigSpec.DoubleValue WEATHER2_GRABBED_BLOCK_MAX_MASS = BUILDER
+                        .comment(
+                                        "Only used when weather2TornadoesGrabBlocksAsPhysicsObjects is enabled. Blocks heavier than",
+                                        "this (Sable's PhysicsBlockPropertyHelper.getMass(), in Sable's own mass units - data-driven",
+                                        "per block type, check a few of your pack's block masses with Sable's own tooling before",
+                                        "tuning this) are left to Weather2's normal (cosmetic-only) grab instead of becoming a",
+                                        "physics object, so a tornado can't casually fling something absurdly heavy.")
+                        .defineInRange("weather2GrabbedBlockMaxMass", 100.0, 0.0, Double.MAX_VALUE);
+
+        public static final ModConfigSpec.IntValue WEATHER2_MAX_CONCURRENT_TORNADO_DEBRIS = BUILDER
+                        .comment(
+                                        "Only used when weather2TornadoesGrabBlocksAsPhysicsObjects is enabled. A strong tornado can",
+                                        "grab several blocks per tick, and each one becomes a real sub-level - its own plot, light",
+                                        "engine, mass tracker, and rigid body - not a free particle, so nothing should let that grow",
+                                        "unbounded. Per level (dimension), once this many tornado-debris sub-levels are alive at",
+                                        "once, any further grabbed blocks fall back to Weather2's normal cosmetic-only grab (same as",
+                                        "an ineligible block) until some existing debris lands and clears out. The count is read",
+                                        "live off the sub-level container itself rather than kept in a running tally, specifically",
+                                        "so it can't drift out of sync and get stuck refusing new debris forever.")
+                        .defineInRange("weather2MaxConcurrentTornadoDebris", 24, 0, Integer.MAX_VALUE);
+
+        public static final ModConfigSpec.BooleanValue FIX_UNNECESSARY_SUBLEVEL_QUERIES = BUILDER
+                        .comment(
+                                        "Sable's SubLevelPhysicsSystem.queryIntersecting() has a spatial ticket-based index built for",
+                                        "exactly this (SubLevelPhysicsSystem.USE_TICKETS_FOR_QUERIES), but it's hardcoded off in",
+                                        "Sable itself - it throws if used, meaning the resident-tracking behind it isn't trusted by",
+                                        "its own author yet. Forcing it on ourselves would risk entities silently failing to collide",
+                                        "with sub-levels if that tracking has gaps, which is a far worse bug than the CPU it'd save,",
+                                        "so this patch does not do that. Instead, every query (called from many places per entity",
+                                        "per tick - fluid checks, block-inside checks, getOnPos, collision) currently falls back to",
+                                        "a brute-force scan of every loaded sub-level in the level, even when none of them are",
+                                        "anywhere near the entity asking. This adds one cheap, provably-safe pre-check: once per",
+                                        "tick, the bounding boxes of every loaded sub-level are unioned into one padded envelope; a",
+                                        "query outside that envelope returns empty immediately without touching the sub-level list",
+                                        "at all, and a query that does overlap it falls through to the exact same brute-force scan",
+                                        "as before. The envelope is refreshed once per tick (not live per-query), padded a few",
+                                        "blocks to absorb a tick's worth of ordinary movement, so a fast-moving sub-level can't slip",
+                                        "past it - the same last-tick-position broad-phase trade-off any spatial acceleration",
+                                        "structure in a physics engine makes.")
+                        .define("fixUnnecessarySubLevelQueries", true);
+
         public static final ModConfigSpec SPEC = BUILDER.build();
 }

@@ -6,7 +6,8 @@
     "redundant_mass_merge.MergedMassTrackerMixin",
     "sublevel_assembly_removed_container_race.SubLevelAssemblyHelperMixin",
     "skip_unobserved_sublevel_ticking.SubLevelMixin",
-    "uncapped_sublevel_light_drain.ServerLevelPlotMixin"
+    "uncapped_sublevel_light_drain.ServerLevelPlotMixin",
+    "reduce_unnecessary_sublevel_queries.SubLevelContainerQueryMixin"
   ],
   "injectors": {
     "defaultRequire": 1
