@@ -2,7 +2,12 @@
   "required": true,
   "package": "mackery.sablepatched.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [],
+  "mixins": [
+    "redundant_mass_merge.MergedMassTrackerMixin",
+    "sublevel_assembly_removed_container_race.SubLevelAssemblyHelperMixin",
+    "skip_unobserved_sublevel_ticking.SubLevelMixin",
+    "uncapped_sublevel_light_drain.ServerLevelPlotMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },

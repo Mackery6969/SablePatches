@@ -1,0 +1,15 @@
+{
+  "required": false,
+  "plugin": "mackery.sablepatched.mixin.weather2.Weather2MixinPlugin",
+  "package": "mackery.sablepatched.mixin.weather2",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "tornado_moves_sublevels.TornadoHelperMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

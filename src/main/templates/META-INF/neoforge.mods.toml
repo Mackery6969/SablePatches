@@ -53,6 +53,10 @@ Fixes a lot of Sable's Entity Ticking
 [[mixins]]
 config="${mod_id}.mixins.json"
 
+# Weather2 compat
+[[mixins]]
+config="${mod_id}-weather2.mixins.json"
+
 # The [[accessTransformers]] block allows you to declare where your AT file is.
 # If this block is omitted, a fallback attempt will be made to load an AT from META-INF/accesstransformer.cfg
 #[[accessTransformers]]
@@ -86,6 +90,24 @@ config="${mod_id}.mixins.json"
     # This version range declares a minimum of the current minecraft version up to but not including the next major version
     versionRange="${minecraft_version_range}"
     ordering="NONE"
+    side="BOTH"
+
+# SablePatched is a mixin patch mod for Sable - it does nothing without it.
+[[dependencies.${mod_id}]]
+    modId="sable"
+    type="required"
+    reason="SablePatched applies mixin fixes/optimizations to Sable and has no purpose without it"
+    versionRange="[${sable_version},)"
+    ordering="AFTER"
+    side="BOTH"
+
+# Optional compat target - tornadoes pushing/spinning Sable sub-levels. Fully absent if not installed.
+[[dependencies.${mod_id}]]
+    modId="weather2"
+    type="optional"
+    reason="Enables Weather2 tornadoes properly pulling/spinning Sable sub-levels instead of ignoring them"
+    versionRange="[${weather2_version},)"
+    ordering="AFTER"
     side="BOTH"
 
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares

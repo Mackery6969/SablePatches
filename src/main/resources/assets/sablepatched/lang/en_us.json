@@ -1,13 +1,2 @@
 {
-  "itemGroup.sablepatched": "Example Mod Tab",
-  "block.sablepatched.example_block": "Example Block",
-  "item.sablepatched.example_item": "Example Item",
-
-  "sablepatched.configuration.title": "Sable Patched Configs",
-  "sablepatched.configuration.section.sablepatched.common.toml": "Sable Patched Configs",
-  "sablepatched.configuration.section.sablepatched.common.toml.title": "Sable Patched Configs",
-  "sablepatched.configuration.items": "Item List",
-  "sablepatched.configuration.logDirtBlock": "Log Dirt Block",
-  "sablepatched.configuration.magicNumberIntroduction": "Magic Number Text",
-  "sablepatched.configuration.magicNumber": "Magic Number"
 }
