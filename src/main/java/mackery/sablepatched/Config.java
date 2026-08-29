@@ -78,14 +78,25 @@ public class Config {
                                         "unnecessary work, so it's a deliberate trade of some overhead for a real gameplay effect.")
                         .define("weather2TornadoesGrabBlocksAsPhysicsObjects", false);
 
-        public static final ModConfigSpec.DoubleValue WEATHER2_GRABBED_BLOCK_MAX_MASS = BUILDER
+        public static final ModConfigSpec.DoubleValue WEATHER2_GRABBED_BLOCK_MAX_MASS_AT_MIN_INTENSITY = BUILDER
                         .comment(
-                                        "Only used when weather2TornadoesGrabBlocksAsPhysicsObjects is enabled. Blocks heavier than",
-                                        "this (Sable's PhysicsBlockPropertyHelper.getMass(), in Sable's own mass units - data-driven",
-                                        "per block type, check a few of your pack's block masses with Sable's own tooling before",
-                                        "tuning this) are left to Weather2's normal (cosmetic-only) grab instead of becoming a",
-                                        "physics object, so a tornado can't casually fling something absurdly heavy.")
-                        .defineInRange("weather2GrabbedBlockMaxMass", 100.0, 0.0, Double.MAX_VALUE);
+                                        "Only used when weather2TornadoesGrabBlocksAsPhysicsObjects is enabled. The heaviest block",
+                                        "(Sable's PhysicsBlockPropertyHelper.getMass()) a barely-formed tornado can pick up as a",
+                                        "physics object; a full-strength one can pick up up to weather2GrabbedBlockMaxMassAtMaxIntensity",
+                                        "below - interpolated by tornado intensity in between (see weather2ScaleForceByIntensity;",
+                                        "always uses the max-intensity value if that's disabled). For reference, in Sable's own",
+                                        "default mass tiers: leaves/similar 'light' blocks are ~0.5, a normal block is 1.0, stone/",
+                                        "obsidian ('heavy') is 2.0, and iron/gold/diamond storage blocks ('super_heavy') are 4.0 -",
+                                        "so the default here means only light/normal blocks are grabbable by a weak tornado.")
+                        .defineInRange("weather2GrabbedBlockMaxMassAtMinIntensity", 1.0, 0.0, Double.MAX_VALUE);
+
+        public static final ModConfigSpec.DoubleValue WEATHER2_GRABBED_BLOCK_MAX_MASS_AT_MAX_INTENSITY = BUILDER
+                        .comment(
+                                        "See weather2GrabbedBlockMaxMassAtMinIntensity above. The default of 10.0 comfortably covers",
+                                        "Sable's 'super_heavy' tier (iron/gold/diamond blocks, mass 4.0, 8.0 for double blocks) at",
+                                        "full tornado strength, while still excluding extreme outliers a pack might define (e.g.",
+                                        "Sable itself gives vanilla bedrock a mass of 1000.0).")
+                        .defineInRange("weather2GrabbedBlockMaxMassAtMaxIntensity", 10.0, 0.0, Double.MAX_VALUE);
 
         public static final ModConfigSpec.IntValue WEATHER2_MAX_CONCURRENT_TORNADO_DEBRIS = BUILDER
                         .comment(
@@ -98,6 +109,27 @@ public class Config {
                                         "live off the sub-level container itself rather than kept in a running tally, specifically",
                                         "so it can't drift out of sync and get stuck refusing new debris forever.")
                         .defineInRange("weather2MaxConcurrentTornadoDebris", 24, 0, Integer.MAX_VALUE);
+
+        public static final ModConfigSpec.BooleanValue WEATHER2_SCALE_FORCE_BY_INTENSITY = BUILDER
+                        .comment(
+                                        "Applies to both weather2TornadoesMoveSubLevels and",
+                                        "weather2TornadoesGrabBlocksAsPhysicsObjects. Weather2's own StormObject.spinObject() barely",
+                                        "scales its pull strength with tornado intensity once a tornado is fully formed (STAGE1",
+                                        "through STAGE5 apply essentially the same pull) - only the STATE_FORMING ramp-up varies",
+                                        "much. This multiplies the impulse this mod applies by an extra factor (0.4x at formation up",
+                                        "to 1.6x at STAGE5) so a monstrous tornado visibly throws sub-levels and debris around more",
+                                        "forcefully than a weak one.")
+                        .define("weather2ScaleForceByIntensity", true);
+
+        public static final ModConfigSpec.BooleanValue WEATHER2_FRAGILE_BLOCKS_BREAK_ON_LANDING = BUILDER
+                        .comment(
+                                        "Only used when weather2TornadoesGrabBlocksAsPhysicsObjects is enabled. Blocks Sable itself",
+                                        "already classifies as fragile (PhysicsBlockPropertyTypes.FRAGILE - leaves, bamboo, melon,",
+                                        "pumpkin, cactus, ice, lily pad by default) break apart with normal drops/sound/particles",
+                                        "instead of being placed back down when their debris sub-level comes to rest on the ground",
+                                        "or any other solid block, the same way they'd realistically shatter rather than survive",
+                                        "being flung around and slammed into something by a tornado.")
+                        .define("weather2FragileBlocksBreakOnLanding", true);
 
         public static final ModConfigSpec.BooleanValue FIX_UNNECESSARY_SUBLEVEL_QUERIES = BUILDER
                         .comment(

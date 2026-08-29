@@ -2,6 +2,8 @@ package mackery.sablepatched.mixin.weather2.tornado_grabs_blocks_as_sublevels;
 
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
 import dev.ryanhcode.sable.companion.math.BoundingBox3dc;
+import dev.ryanhcode.sable.mixinterface.block_properties.BlockStateExtension;
+import dev.ryanhcode.sable.physics.config.block_properties.PhysicsBlockPropertyTypes;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import dev.ryanhcode.sable.sublevel.storage.SubLevelRemovalReason;
 import mackery.sablepatched.Config;
@@ -60,7 +62,6 @@ public class ServerSubLevelDebrisLandingMixin {
         );
 
         if (!level.getBlockState(landingPos).isAir()) {
-            // landing spot is occupied - wait rather than overwrite whatever's there
             this.sablepatched$stableTicksAtRest = 0;
             return;
         }
@@ -72,11 +73,19 @@ public class ServerSubLevelDebrisLandingMixin {
             return;
         }
 
-        level.setBlockAndUpdate(landingPos, originalState);
+        if (Config.WEATHER2_FRAGILE_BLOCKS_BREAK_ON_LANDING.get() && isFragile(originalState)) {
+            TornadoDebris.destroyWithEffects(level, landingPos, originalState);
+        } else {
+            level.setBlockAndUpdate(landingPos, originalState);
+        }
 
         final SubLevelContainer container = SubLevelContainer.getContainer(level);
         if (container != null) {
             container.removeSubLevel(self, SubLevelRemovalReason.REMOVED);
         }
+    }
+
+    private static boolean isFragile(final BlockState state) {
+        return ((BlockStateExtension) state).sable$getProperty(PhysicsBlockPropertyTypes.FRAGILE.get());
     }
 }

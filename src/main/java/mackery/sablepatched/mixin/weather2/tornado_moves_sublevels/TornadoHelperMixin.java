@@ -8,6 +8,7 @@ import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
 import mackery.sablepatched.Config;
+import mackery.sablepatched.mixin.weather2.TornadoIntensity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -44,6 +45,9 @@ public class TornadoHelperMixin {
         }
 
         final double dist = this.storm.isPet() ? 3D : this.grabDist * 2D;
+        final float intensityScale = Config.WEATHER2_SCALE_FORCE_BY_INTENSITY.get()
+                ? TornadoIntensity.forceScale(this.storm)
+                : 1F;
 
         for (final ServerSubLevel subLevel : container.getAllSubLevels()) {
             if (subLevel.isRemoved()) {
@@ -83,7 +87,7 @@ public class TornadoHelperMixin {
             final RigidBodyHandle handle = physicsSystem.getPhysicsHandle(subLevel);
             handle.applyImpulseAtPoint(
                     JOMLConversion.toJOML(center),
-                    JOMLConversion.toJOML(deltaVelocity.scale(mass))
+                    JOMLConversion.toJOML(deltaVelocity.scale(mass * intensityScale))
             );
         }
     }

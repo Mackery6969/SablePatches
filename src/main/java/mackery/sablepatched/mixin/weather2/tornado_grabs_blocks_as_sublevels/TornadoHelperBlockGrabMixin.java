@@ -9,6 +9,7 @@ import dev.ryanhcode.sable.physics.config.block_properties.PhysicsBlockPropertyH
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
 import mackery.sablepatched.Config;
+import mackery.sablepatched.mixin.weather2.TornadoIntensity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -47,7 +48,13 @@ public class TornadoHelperBlockGrabMixin {
         }
 
         final double mass = PhysicsBlockPropertyHelper.getMass(serverLevel, pos, state);
-        if (mass <= 0.0 || mass > Config.WEATHER2_GRABBED_BLOCK_MAX_MASS.get()) {
+        final double effectiveMaxMass = Config.WEATHER2_SCALE_FORCE_BY_INTENSITY.get()
+                ? TornadoIntensity.lerp(this.storm,
+                        Config.WEATHER2_GRABBED_BLOCK_MAX_MASS_AT_MIN_INTENSITY.get(),
+                        Config.WEATHER2_GRABBED_BLOCK_MAX_MASS_AT_MAX_INTENSITY.get())
+                : Config.WEATHER2_GRABBED_BLOCK_MAX_MASS_AT_MAX_INTENSITY.get();
+
+        if (mass <= 0.0 || mass > effectiveMaxMass) {
             manager.syncBlockParticleNew(pos, state, owner);
             return;
         }
@@ -61,7 +68,7 @@ public class TornadoHelperBlockGrabMixin {
         }
 
         if (TornadoDebris.countActive(container) >= Config.WEATHER2_MAX_CONCURRENT_TORNADO_DEBRIS.get()) {
-            manager.syncBlockParticleNew(pos, state, owner);
+            TornadoDebris.destroyWithEffects(serverLevel, pos, state);
             return;
         }
 
@@ -80,9 +87,13 @@ public class TornadoHelperBlockGrabMixin {
         final Vec3 initialVelocity = this.storm.spinObject(center, Vec3.ZERO, false, 1F, 1F, true, 0F);
 
         if (initialVelocity.lengthSqr() > 1.0E-6) {
+            final float intensityScale = Config.WEATHER2_SCALE_FORCE_BY_INTENSITY.get()
+                    ? TornadoIntensity.forceScale(this.storm)
+                    : 1F;
+
             physicsSystem.getPhysicsHandle(subLevel).applyImpulseAtPoint(
                     JOMLConversion.toJOML(center),
-                    JOMLConversion.toJOML(initialVelocity.scale(mass))
+                    JOMLConversion.toJOML(initialVelocity.scale(mass * intensityScale))
             );
         }
     }
