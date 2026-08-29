@@ -110,6 +110,32 @@ config="${mod_id}-weather2.mixins.json"
     ordering="AFTER"
     side="BOTH"
 
+# Optional compat target - respecting Super Glue when deciding what a tornado can grab.
+[[dependencies.${mod_id}]]
+    modId="create"
+    type="optional"
+    reason="Enables tornado-grabbed blocks respecting Create's Super Glue"
+    versionRange="[${create_version},)"
+    ordering="AFTER"
+    side="BOTH"
+
+# Optional compat target - respecting Honey Glue (bundled with the separate "simulated" modid below).
+[[dependencies.${mod_id}]]
+    modId="aeronautics"
+    type="optional"
+    reason="Enables tornado-grabbed blocks respecting Create Aeronautics' Honey Glue"
+    versionRange="[${aeronautics_version},)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="simulated"
+    type="optional"
+    reason="Enables tornado-grabbed blocks respecting Create Aeronautics' Honey Glue"
+    versionRange="[${aeronautics_version},)"
+    ordering="AFTER"
+    side="BOTH"
+
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
 # stop your mod loading on the server for example.

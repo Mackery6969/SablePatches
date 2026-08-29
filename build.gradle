@@ -173,6 +173,12 @@ dependencies {
 
     compileOnly("foundry.veil:veil-common-${minecraft_version}:${veil_version}") { transitive = false }
     localRuntime("foundry.veil:veil-common-${minecraft_version}:${veil_version}") { transitive = false }
+
+    compileOnly("maven.modrinth:create:${create_modrinth_version}") { transitive = false }
+    localRuntime("maven.modrinth:create:${create_modrinth_version}") { transitive = false }
+
+    compileOnly("maven.modrinth:create-aeronautics:${aeronautics_modrinth_version}") { transitive = false }
+    localRuntime("maven.modrinth:create-aeronautics:${aeronautics_modrinth_version}") { transitive = false }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

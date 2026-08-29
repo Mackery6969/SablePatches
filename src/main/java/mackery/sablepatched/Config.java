@@ -131,6 +131,38 @@ public class Config {
                                         "being flung around and slammed into something by a tornado.")
                         .define("weather2FragileBlocksBreakOnLanding", true);
 
+        public static final ModConfigSpec.IntValue WEATHER2_MAX_GLUED_CLUSTER_SIZE = BUILDER
+                        .comment(
+                                        "Only used when weather2TornadoesGrabBlocksAsPhysicsObjects is enabled. A block glued",
+                                        "(Create's Super Glue and/or Create Aeronautics' Honey Glue, whichever are installed) to",
+                                        "others is gathered together with everything transitively glued to it - glued blocks can't",
+                                        "be separated by a tornado, see weather2AllowSeparatingGluedBlocks below - and grabbed as",
+                                        "one sub-level instead of individually. This caps how large that gathered group is allowed",
+                                        "to get before giving up (same idea as, and reusing, Sable's own gatherConnectedBlocks",
+                                        "block-count limit), so one enormous glued structure can't turn a single grab attempt into",
+                                        "an expensive scan.")
+                        .defineInRange("weather2MaxGluedClusterSize", 64, 1, Integer.MAX_VALUE);
+
+        public static final ModConfigSpec.BooleanValue WEATHER2_ALLOW_SEPARATING_GLUED_BLOCKS = BUILDER
+                        .comment(
+                                        "Only used when weather2TornadoesGrabBlocksAsPhysicsObjects is enabled. By default, a glued",
+                                        "cluster is grabbed as a whole or not at all - if its combined mass is too heavy for the",
+                                        "current tornado, none of it is taken, the same way two small pieces glued only to each",
+                                        "other are easy to carry off together but a small piece glued onto a large structure isn't",
+                                        "going anywhere without the rest of it. Enabling this allows tearing a single glued block",
+                                        "away from its cluster instead when the whole cluster is too heavy - see",
+                                        "weather2GluedSeparationResistance below to make that harder than grabbing an unglued block,",
+                                        "rather than exactly as easy.")
+                        .define("weather2AllowSeparatingGluedBlocks", false);
+
+        public static final ModConfigSpec.DoubleValue WEATHER2_GLUED_SEPARATION_RESISTANCE = BUILDER
+                        .comment(
+                                        "Only used when weather2AllowSeparatingGluedBlocks is enabled. When tearing a single block",
+                                        "away from a too-heavy glued cluster, its own mass is multiplied by this before the normal",
+                                        "eligibility check (weather2GrabbedBlockMaxMassAt*Intensity) - so it still takes a stronger",
+                                        "tornado to pick it off than an equivalent block that was never glued to anything.")
+                        .defineInRange("weather2GluedSeparationResistance", 4.0, 1.0, Double.MAX_VALUE);
+
         public static final ModConfigSpec.BooleanValue FIX_UNNECESSARY_SUBLEVEL_QUERIES = BUILDER
                         .comment(
                                         "Sable's SubLevelPhysicsSystem.queryIntersecting() has a spatial ticket-based index built for",
