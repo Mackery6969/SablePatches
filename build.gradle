@@ -195,6 +195,8 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_version            : mod_version,
             sable_version          : sable_version,
             weather2_version       : weather2_version,
+            create_version         : create_version,
+            aeronautics_version    : aeronautics_version,
     ]
     inputs.properties replaceProperties
     expand replaceProperties
