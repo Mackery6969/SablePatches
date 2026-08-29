@@ -43,6 +43,8 @@ repositories {
         url = "https://maven.ryanhcode.dev/releases"
         content {
             includeGroup "dev.ryanhcode.sable-companion"
+            // dev.simulated_team.simulated (HoneyGlueEntity) is also published here, same as sable-companion.
+            includeGroup "dev.simulated_team.simulated"
         }
     }
 
@@ -177,8 +179,8 @@ dependencies {
     compileOnly("maven.modrinth:create:${create_modrinth_version}") { transitive = false }
     localRuntime("maven.modrinth:create:${create_modrinth_version}") { transitive = false }
 
-    compileOnly("maven.modrinth:create-aeronautics:${aeronautics_modrinth_version}") { transitive = false }
-    localRuntime("maven.modrinth:create-aeronautics:${aeronautics_modrinth_version}") { transitive = false }
+    compileOnly("dev.simulated_team.simulated:simulated-common-${minecraft_version}:${aeronautics_version}") { transitive = false }
+    localRuntime("dev.simulated_team.simulated:simulated-common-${minecraft_version}:${aeronautics_version}") { transitive = false }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
