@@ -40,6 +40,9 @@ updates:
         update-types:
           - "version-update:semver-major"
 
+      # Netty is bundled by Minecraft/NeoForge; this mod neither declares nor ships it
+      - dependency-name: "io.netty:*"
+
       # Provided by NeoForge/Minecraft's runtime, not shipped or versioned by this mod
       - dependency-name: "org.jline:jline-reader"
 
