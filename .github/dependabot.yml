@@ -40,6 +40,9 @@ updates:
         update-types:
           - "version-update:semver-major"
 
+      # Provided by NeoForge/Minecraft's runtime, not shipped or versioned by this mod
+      - dependency-name: "org.jline:jline-reader"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     target-branch: "main"
