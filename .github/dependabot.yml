@@ -40,6 +40,9 @@ updates:
         update-types:
           - "version-update:semver-major"
 
+      # Netty is bundled by Minecraft/NeoForge; this mod neither declares nor ships it
+      - dependency-name: "io.netty:*"
+
       # Bundled with Minecraft/NeoForge; the game supplies its own copy at runtime
       - dependency-name: "org.lz4:lz4-java"
 
