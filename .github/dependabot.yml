@@ -45,6 +45,9 @@ updates:
 
       # Bundled with Minecraft/NeoForge; the game supplies its own copy at runtime
       - dependency-name: "org.lz4:lz4-java"
+      
+      # Provided by NeoForge/Minecraft's runtime, not shipped or versioned by this mod
+      - dependency-name: "org.jline:jline-reader"
 
   - package-ecosystem: "github-actions"
     directory: "/"

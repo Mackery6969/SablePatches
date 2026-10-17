@@ -33,11 +33,7 @@ public class ServerSubLevelDebrisLandingMixin {
 
         final ServerSubLevel self = (ServerSubLevel) (Object) this;
 
-        if (self.isRemoved()) {
-            return;
-        }
-
-        if (!TornadoDebris.isDebris(self)) {
+        if (self.isRemoved() || !TornadoDebris.isDebris(self)) {
             return;
         }
 
