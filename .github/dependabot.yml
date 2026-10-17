@@ -40,6 +40,9 @@ updates:
         update-types:
           - "version-update:semver-major"
 
+      # Bundled with Minecraft/NeoForge; the game supplies its own copy at runtime
+      - dependency-name: "org.lz4:lz4-java"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     target-branch: "main"
