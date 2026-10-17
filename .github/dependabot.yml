@@ -43,6 +43,9 @@ updates:
       # Netty is bundled by Minecraft/NeoForge; this mod neither declares nor ships it
       - dependency-name: "io.netty:*"
 
+      # Provided by NeoForge/Minecraft's runtime, not shipped or versioned by this mod
+      - dependency-name: "org.jline:jline-reader"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     target-branch: "main"
