@@ -40,6 +40,9 @@ updates:
         update-types:
           - "version-update:semver-major"
 
+      # Netty is bundled by Minecraft/NeoForge; this mod neither declares nor ships it
+      - dependency-name: "io.netty:*"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     target-branch: "main"
