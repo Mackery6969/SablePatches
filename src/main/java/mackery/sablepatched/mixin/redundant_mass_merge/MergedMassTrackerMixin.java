@@ -48,10 +48,15 @@ public class MergedMassTrackerMixin {
             return;
         }
 
+        if (!this.subLevel.getPlot().getContraptions().isEmpty()) {
+            // The merged result includes contraption mass; force a full merge on the next update after they're gone
+            this.sablepatched$lastSelfMass = Double.NaN;
+            return;
+        }
+
         final double mass = this.selfTracker.getMass();
 
-        final boolean unchanged = this.subLevel.getPlot().getContraptions().isEmpty()
-                && mass == this.sablepatched$lastSelfMass
+        final boolean unchanged = mass == this.sablepatched$lastSelfMass
                 && selfCenterOfMass.x() == this.sablepatched$lastSelfComX
                 && selfCenterOfMass.y() == this.sablepatched$lastSelfComY
                 && selfCenterOfMass.z() == this.sablepatched$lastSelfComZ;
